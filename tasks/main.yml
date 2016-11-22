@@ -1,0 +1,17 @@
+---
+
+- name: Create extra groups
+  group: name={{ item.name }} system={{ item.system|default(False) }} state=present
+  with_items: _unix_users.groups
+
+- name: Set /etc/sudoers to allow passwordless sudo for admin group members
+  lineinfile: "dest=/etc/sudoers state=present line='%admin ALL = NOPASSWD: ALL' insertafter='^%sudo(\\s+)ALL' validate='visudo -cf %s'"
+
+- include: add.yml
+  with_items: _unix_users.users
+  when: item.state is not defined or item.state == "present"
+
+- include: remove.yml
+  with_items: _unix_users.users
+  when: item.state is defined and item.state == "absent"
+

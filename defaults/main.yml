@@ -1,0 +1,15 @@
+---
+
+_unix_users:
+  groups:
+    - { name: admin, system: yes }
+  users:
+    - name: lukas.pustina
+      comment: Lukas Pustina
+      password:
+      ssh:
+        public_key: ssh-rsa ... notebook.local
+      shell: /usr/bin/zsh
+      groups:
+        - admin
+

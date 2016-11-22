@@ -1,0 +1,8 @@
+---
+
+- name: Remove UNIX user {{ item.name }}
+  user: name={{ item.name }} state=absent
+
+- name: Delete UNIX users ssh dir
+  file: dest="/home/{{ item.name }}" state=absent
+

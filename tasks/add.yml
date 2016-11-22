@@ -1,0 +1,15 @@
+---
+
+- name: Create UNIX user {{ item.name }}
+  user: name={{ item.name }} comment="{{ item.comment }}" groups="{{ item.groups|join(',') }}" password={{ item.password|default('!') }} shell="{{ item.shell|default('/bin/bash') }}"
+
+- block:
+
+    - name: Create UNIX user ssh dir
+      file: dest="/home/{{ item.name }}/.ssh" state=directory owner={{ item.name }} group={{ item.name }} mode=0700
+
+    - name: Set UNIX user public SSH key
+      copy: content="{{ item.ssh.public_key }}" dest="/home/{{ item.name }}/.ssh/authorized_keys" owner={{ item.name }} group={{ item.name }} mode=0644
+
+  when: item.ssh is defined and item.ssh.public_key is defined
+
