@@ -1,8 +1,8 @@
 ---
+# vim:ft=ansible:ts=2:et:
+- name: Remove UNIX user "{{ item.name }}"
+  user: name="{{ item.name }}" state=absent
 
-- name: Remove UNIX user {{ item.name }}
-  user: name={{ item.name }} state=absent
-
-- name: Delete UNIX users ssh dir
+- name: Delete UNIX user's ssh dir
   file: dest="/home/{{ item.name }}" state=absent
 
