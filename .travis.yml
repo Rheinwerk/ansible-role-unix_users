@@ -26,9 +26,6 @@ script:
   # Basic role syntax check
   - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
   - cd tests; ./run_tests.sh
-  - cat /etc/security/limits.conf
-  - cat /etc/pam.d/common-session
-  - cat /etc/pam.d/common-session-noninteractive
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
