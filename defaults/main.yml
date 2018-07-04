@@ -12,4 +12,3 @@ _unix_users:
       shell: /usr/bin/zsh
       groups:
         - admin
-

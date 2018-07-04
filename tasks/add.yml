@@ -12,4 +12,3 @@
       copy: content="{{ item.ssh.public_key }}" dest="/home/{{ item.name }}/.ssh/authorized_keys" owner="{{ item.name }}" group="{{ item.name }}" mode=0644
 
   when: item.ssh is defined and item.ssh.public_key is defined
-

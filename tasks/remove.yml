@@ -5,4 +5,3 @@
 
 - name: Delete UNIX user's ssh dir
   file: dest="/home/{{ item.name }}" state=absent
-

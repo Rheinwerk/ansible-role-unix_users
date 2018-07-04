@@ -15,4 +15,3 @@
 - include: remove.yml
   with_items: "{{ _unix_users.users }}"
   when: item.state is defined and item.state == "absent"
-
