@@ -3,7 +3,7 @@ Unix Users Setup
 
 This role can be used to create Unix users and assign them to groups.
 
-[![Build Status](https://travis-ci.org/Rheinwerk/ansible-role-unix_users.svg?branch=master)](https://travis-ci.org/Rheinwerk/ansible-role-unix_users)
+[![Build Status](https://github.com/Rheinwerk/ansible-role-unix_users/actions/workflows/ci.yml/badge.svg)](https://github.com/Rheinwerk/ansible-role-unix_users/actions/workflows/ci.yml)
 
 Requirements
 ------------
