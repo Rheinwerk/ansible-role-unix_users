@@ -9,8 +9,8 @@
     shell: "{{ item.shell | default('/bin/bash') }}"
 
 - name: Create unix user public_key authentication
+  when: item.ssh is defined and item.ssh.public_key is defined
   block:
-
     - name: Create UNIX user ssh dir
       file:
         dest: "/home/{{ item.name }}/.ssh"
@@ -26,5 +26,3 @@
         owner: "{{ item.name }}"
         group: "{{ item.name }}"
         mode: 0644
-
-  when: item.ssh is defined and item.ssh.public_key is defined
