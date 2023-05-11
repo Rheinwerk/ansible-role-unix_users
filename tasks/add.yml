@@ -1,7 +1,7 @@
 ---
 # vim:ft=ansible:ts=2:et:
 - name: "Create UNIX user {{ item.name }}"
-  user:
+  ansible.builtin.user:
     name: "{{ item.name }}"
     comment: "{{ item.comment }}"
     groups: "{{ item.groups | join(',') }}"
@@ -12,7 +12,7 @@
   when: item.ssh is defined and item.ssh.public_key is defined
   block:
     - name: Create UNIX user ssh dir
-      file:
+      ansible.builtin.file:
         dest: "/home/{{ item.name }}/.ssh"
         state: directory
         owner: "{{ item.name }}"
@@ -20,7 +20,7 @@
         mode: 0700
 
     - name: Set UNIX user public SSH key
-      copy:
+      ansible.builtin.copy:
         content: "{{ item.ssh.public_key }}"
         dest: "/home/{{ item.name }}/.ssh/authorized_keys"
         owner: "{{ item.name }}"
