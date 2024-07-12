@@ -5,6 +5,7 @@
   ansible.builtin.group:
     name: "{{ item.name }}"
     system: "{{ item.system | default(False) }}"
+    gid: "{{ item.gid | d(omit) }}"
     state: present
   with_items: "{{ _unix_users.groups }}"
 

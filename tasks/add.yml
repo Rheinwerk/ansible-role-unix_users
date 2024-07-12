@@ -4,6 +4,7 @@
   ansible.builtin.user:
     name: "{{ item.name }}"
     comment: "{{ item.comment }}"
+    uid: "{{ item.uid | d(omit) }}"
     groups: "{{ item.groups | join(',') }}"
     password: "{{ item.password | default('!') }}"
     shell: "{{ item.shell | default('/bin/bash') }}"
