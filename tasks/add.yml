@@ -18,7 +18,7 @@
         state: directory
         owner: "{{ item.name }}"
         group: "{{ item.name }}"
-        mode: 0700
+        mode: "0700"
 
     - name: Set UNIX user public SSH key
       ansible.builtin.copy:
@@ -26,4 +26,4 @@
         dest: "/home/{{ item.name }}/.ssh/authorized_keys"
         owner: "{{ item.name }}"
         group: "{{ item.name }}"
-        mode: 0644
+        mode: "0644"
