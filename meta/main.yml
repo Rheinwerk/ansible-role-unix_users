@@ -1,6 +1,5 @@
 galaxy_info:
-  author: Daniel Schneller
-  namespace: rheinwerk
+  author: rheinwerk
   role_name: unix_users
   description: Sets up Unix users and assigns them to groups
   company: Rheinwerk
