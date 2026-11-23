@@ -1,0 +1,53 @@
+---
+- name: Assert the groups are a list of named groups
+  ansible.builtin.assert:
+    that:
+      - _unix_users_groups is sequence
+      - _unix_users_groups is not string
+      - _unix_users_groups | reject('mapping') | list | length == 0
+      - _unix_users_groups | selectattr('name', 'undefined') | list | length == 0
+      - _unix_users_groups | map(attribute='name') | reject('string') | list | length == 0
+      - _unix_users_groups | map(attribute='name') | reject('match', '^[a-z_][a-z0-9_-]*\\Z') | list | length == 0
+      - _unix_users_groups | map(attribute='name') | unique | list | length == _unix_users_groups | length
+      - _unix_users_groups | selectattr('gid', 'defined') | map(attribute='gid') | map('int') | select('lt', 1) | list | length == 0
+    fail_msg: "_unix_users_groups must be a list of groups with unique names ([a-z_][a-z0-9_-]*) and positive gids"
+    quiet: true
+  tags:
+    - always
+
+- name: Assert the users are a list of named users
+  ansible.builtin.assert:
+    that:
+      - _unix_users_users is sequence
+      - _unix_users_users is not string
+      - _unix_users_users | reject('mapping') | list | length == 0
+      - _unix_users_users | selectattr('name', 'undefined') | list | length == 0
+      - _unix_users_users | map(attribute='name') | reject('string') | list | length == 0
+      - _unix_users_users | map(attribute='name') | unique | list | length == _unix_users_users | length
+    fail_msg: "_unix_users_users must be a list of users with unique names"
+    quiet: true
+  tags:
+    - always
+
+- name: Assert every user's settings
+  ansible.builtin.assert:
+    that:
+      - item.name is match('^[a-z_][a-z0-9_.-]*\\Z')
+      - (item.state | default('present')) in _unix_users_states
+      - (item.state | default('present')) == 'absent' or (item.comment is defined and item.comment is string and '\n' not in item.comment)
+      - (item.state | default('present')) == 'absent' or (item.groups is defined and item.groups is sequence and item.groups is not string)
+      - item.groups is not defined or item.groups | reject('string') | list | length == 0
+      - item.groups is not defined or item.groups | reject('match', '^[a-z_][a-z0-9_-]*\\Z') | list | length == 0
+      - item.uid is not defined or item.uid | int >= 1
+      - item.shell is not defined or item.shell is match('^/\\S+\\Z')
+      - item.ssh is not defined or item.ssh is mapping
+      - item.ssh is not defined or item.ssh.public_key is not defined or item.ssh.public_key is string
+    fail_msg: >-
+      {{ item.name | default(item) }}: a user needs a user name; a present user also a one-line comment and a list of group names;
+      uid is a positive integer, shell an absolute path, state one of {{ _unix_users_states | join(', ') }}
+    quiet: true
+  loop: "{{ _unix_users_users }}"
+  loop_control:
+    label: "{{ item.name | default('?') }}"
+  tags:
+    - always

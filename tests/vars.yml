@@ -1,0 +1,6 @@
+---
+# Fakes the consumer contract (CENTERDEVICE.user, CENTERDEVICE.group) the defaults read in the
+# infrastructure repo, so the molecule run converges with the role defaults
+CENTERDEVICE:
+  user: molecule-app
+  group: molecule-app

@@ -1,0 +1,70 @@
+---
+argument_specs:
+  main:
+    short_description: Create groups, create or remove users with an optional SSH key, allow passwordless sudo for the admin group
+    options:
+      _unix_users_groups:
+        type: list
+        elements: dict
+        description:
+          - Groups to create.
+        options:
+          name:
+            type: str
+            required: true
+            description:
+              - Group name.
+          system:
+            type: bool
+            description:
+              - Create a system group; default false.
+          gid:
+            type: int
+            description:
+              - Group ID; default chosen by the system.
+      _unix_users_users:
+        type: list
+        elements: dict
+        description:
+          - Users to create or remove. A present user needs comment and groups.
+        options:
+          name:
+            type: str
+            required: true
+            description:
+              - User name.
+          comment:
+            type: str
+            description:
+              - GECOS field.
+          groups:
+            type: list
+            elements: str
+            description:
+              - Supplementary groups; they must exist.
+          uid:
+            type: int
+            description:
+              - User ID; default chosen by the system.
+          password:
+            type: str
+            no_log: true
+            description:
+              - Password hash; default C(!) (locked).
+          shell:
+            type: str
+            description:
+              - Login shell; default /bin/bash.
+          ssh:
+            type: dict
+            description:
+              - SSH settings.
+            options:
+              public_key:
+                type: str
+                description:
+                  - Written to ~/.ssh/authorized_keys.
+          state:
+            type: str
+            description:
+              - C(present) (default) or C(absent); absent removes the user and its home directory.
