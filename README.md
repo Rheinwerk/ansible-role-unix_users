@@ -26,7 +26,8 @@ fails the run at the start.
 | `_unix_users_users` | one user `"{{ CENTERDEVICE.user }}"`, comment `CenterDevice User`, groups `["{{ CENTERDEVICE.group }}"]`, shell `/usr/sbin/nologin` | Users to create or remove, see below. |
 
 The defaults read the CenterDevice consumer contract (`CENTERDEVICE.user`,
-`CENTERDEVICE.group`); a play without it sets both variables itself.
+`CENTERDEVICE.group`); a play without it sets both variables itself. Setting only one of them fails with
+`'CENTERDEVICE' is undefined`, because the argument validation templates both defaults.
 
 Group keys:
 
