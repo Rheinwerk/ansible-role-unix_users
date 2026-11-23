@@ -1,0 +1,5 @@
+---
+# Values of a user's state (tasks/assert.yml)
+_unix_users_states:
+  - present
+  - absent

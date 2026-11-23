@@ -1,0 +1,34 @@
+---
+# The default user and group with the names from tests/vars.yml
+- name: Verify
+  hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Read the user and group databases
+      ansible.builtin.getent:
+        database: "{{ item }}"
+      loop:
+        - passwd
+        - group
+
+    - name: The default user and its system group exist
+      ansible.builtin.assert:
+        that:
+          - "'molecule-app' in ansible_facts.getent_passwd"
+          - ansible_facts.getent_passwd['molecule-app'][3] == 'CenterDevice User'
+          - ansible_facts.getent_passwd['molecule-app'][5] == '/usr/sbin/nologin'
+          - "'molecule-app' in ansible_facts.getent_group"
+          - ansible_facts.getent_group['molecule-app'][1] | int < 1000
+          - "'molecule-app' in ansible_facts.getent_group['molecule-app'][2].split(',')"
+        fail_msg: "{{ ansible_facts.getent_passwd['molecule-app'] | default('no user') }} {{ ansible_facts.getent_group['molecule-app'] | default('no group') }}"
+
+    - name: Read /etc/sudoers
+      ansible.builtin.slurp:
+        src: /etc/sudoers
+      register: verify_sudoers
+
+    - name: The admin group may sudo without a password
+      ansible.builtin.assert:
+        that:
+          - "'%admin ALL = NOPASSWD: ALL' in (verify_sudoers.content | b64decode).splitlines()"

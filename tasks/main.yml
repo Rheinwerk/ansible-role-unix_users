@@ -1,13 +1,19 @@
 ---
 # vim:ft=ansible:ts=2:et:
+- name: Assert
+  ansible.builtin.import_tasks: assert.yml
+  tags:
+    - always
 
 - name: Create extra groups
   ansible.builtin.group:
     name: "{{ item.name }}"
-    system: "{{ item.system | default(False) }}"
+    system: "{{ item.system | default(false) }}"
     gid: "{{ item.gid | d(omit) }}"
     state: present
-  with_items: "{{ _unix_users.groups }}"
+  loop: "{{ _unix_users_groups }}"
+  loop_control:
+    label: "{{ item.name }}"
 
 - name: Set /etc/sudoers to allow passwordless sudo for admin group members
   ansible.builtin.lineinfile:
@@ -19,10 +25,14 @@
 
 - name: Include add tasks
   ansible.builtin.include_tasks: add.yml
-  with_items: "{{ _unix_users.users }}"
+  loop: "{{ _unix_users_users }}"
+  loop_control:
+    label: "{{ item.name }}"
   when: item.state is not defined or item.state == "present"
 
 - name: Include remove tasks
   ansible.builtin.include_tasks: remove.yml
-  with_items: "{{ _unix_users.users }}"
+  loop: "{{ _unix_users_users }}"
+  loop_control:
+    label: "{{ item.name }}"
   when: item.state is defined and item.state == "absent"
